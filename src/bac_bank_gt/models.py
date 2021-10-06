@@ -124,14 +124,6 @@ class BACBankAccount(AbstractBankAccount):
     _FILE_NAME = "".join(random.choices(string.digits, k=8))
     _DEFAULT_HEADERS = {}
 
-    def _convert_date_format(self, date_string):
-        first_two = date_string[0:2]
-        second_two = date_string[3:5]
-        return "{0}/{1}/{2}".format(second_two, first_two, date_string[6:])
-
-    def process_mov_line(self, line):
-        pass
-
     def fetch_movements(self, start_date, end_date):
 
         movements = []
