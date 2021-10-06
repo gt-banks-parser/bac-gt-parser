@@ -20,13 +20,6 @@ from logging.handlers import WatchedFileHandler
 
 BAC_ERRORS = {"INVALID_CREDENTIALS": "Usuario, contraseña, país o token inválido"}
 logger = logging.getLogger(__name__)
-sh = logging.StreamHandler(stream=sys.stdout)
-sh.setLevel(logging.DEBUG)
-fh = WatchedFileHandler(filename="test.log")
-fh.setLevel(logging.DEBUG)
-logger.addHandler(sh)
-logger.addHandler(fh)
-logging.basicConfig(level=logging.DEBUG, filename="test.log", filemode="w")
 
 
 class BACBaseBank(BaseBank):
