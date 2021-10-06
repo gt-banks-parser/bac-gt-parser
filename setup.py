@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="bac_bank_parser_gt",
-    version="0.0.1",
+    version="0.1.0",
     author="Carlos Simon",
     author_email="dev@csimon.dev",
     description="Banco America Central (BAC) Parser",
