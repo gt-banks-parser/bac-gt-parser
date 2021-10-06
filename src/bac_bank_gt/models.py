@@ -15,7 +15,7 @@ import time
 import datetime
 import logging
 import sys
-
+import re
 
 BAC_ERRORS = {"INVALID_CREDENTIALS": "Usuario, contraseña, país o token inválido"}
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class BACBaseBank(BaseBank):
         super().__init__(
             login_url="https://www1.sucursalelectronica.com/redir/redirect.go",
             accounts_url="https://www1.sucursalelectronica.com/ebac/module/consolidatedQuery/consolidatedQuery.go",
-            movements_url="https://www.banrural.com.gt/corp/a/consulta_movimientos_resp.asp",
+            movements_url="https://www1.sucursalelectronica.com/ebac/module/accountbalance/accountBalance.go",
             logout_url="https://www1.sucursalelectronica.com/ebac/common/logout.go",
         )
 
@@ -76,6 +76,30 @@ class BACBank(Bank):
 
     def fetch_accounts(self):
         accounts = []
+        r = self._fetch(self.accounts_url)
+        logger.info("Did received response from accounts url")
+        bs = BeautifulSoup(r, features="html.parser")
+        account_lines = bs.find("table", {"id": re.compile("productTable.*")}).findAll(
+            "tr"
+        )
+
+        for line in account_lines:
+            columns = line.findAll("td")
+            if len(columns) > 4:
+                acccount_id = columns[1].getText().strip()
+                alias = " - ".join(
+                    [part.strip() for part in columns[0].getText().strip().split("-")]
+                )
+                currency = columns[3].getText().strip().split("\t")[-1]
+                print(alias, acccount_id, currency)
+                account = BACBankAccount(
+                    bank=self,
+                    account_number=acccount_id,
+                    alias=alias,
+                    type="",
+                    currency=currency,
+                )
+                accounts.append(account)
         return accounts
 
     def get_account(self, number):
