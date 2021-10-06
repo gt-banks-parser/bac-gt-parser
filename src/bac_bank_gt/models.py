@@ -1,4 +1,3 @@
-from os import error
 from bank_base_gt import (
     AbstractBankAccount,
     BaseBank,
@@ -7,16 +6,10 @@ from bank_base_gt import (
     Movement,
 )
 from bs4 import BeautifulSoup
-from urllib.parse import parse_qs, quote_plus
-import random
-import string
 from money import Money
-import time
 import datetime
 import logging
-import sys
 import re
-from logging.handlers import WatchedFileHandler
 
 BAC_ERRORS = {"INVALID_CREDENTIALS": "Usuario, contraseña, país o token inválido"}
 logger = logging.getLogger(__name__)
@@ -121,9 +114,6 @@ class BACBank(Bank):
 
 
 class BACBankAccount(AbstractBankAccount):
-    _FILE_NAME = "".join(random.choices(string.digits, k=8))
-    _DEFAULT_HEADERS = {}
-
     def fetch_movements(self, start_date, end_date):
 
         movements = []
