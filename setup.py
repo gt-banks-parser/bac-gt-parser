@@ -25,5 +25,5 @@ setup(
         "Topic :: Utilities",
     ],
     python_requires=">=3.6",
-    install_requires=["bank_base_gt>=0.3"],
+    install_requires=["bank_base_gt>=0.3", "html5lib==1.1"],
 )
