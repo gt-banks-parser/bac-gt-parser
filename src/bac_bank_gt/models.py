@@ -71,10 +71,9 @@ class BACBank(Bank):
         accounts = []
         r = self._fetch(self.accounts_url)
         logger.info("Did received response from accounts url")
+
         bs = BeautifulSoup(r, features="html.parser")
-        account_lines = bs.find("table", {"id": re.compile("productTable.*")}).findAll(
-            "tr"
-        )
+        account_lines = bs.findAll("table")[0].findAll("tr")
 
         for line in account_lines:
             columns = line.findAll("td")
@@ -115,7 +114,16 @@ class BACBank(Bank):
 
 class BACBankAccount(AbstractBankAccount):
     def fetch_movements(self, start_date, end_date):
-
+        logging.info(
+            "Will fetch movements data {1} - {0}".format(
+                {
+                    "productId": self.account_bank_reference,
+                    "initDate": start_date.strftime("%d/%m/%Y"),
+                    "endDate": end_date.strftime("%d/%m/%Y"),
+                },
+                self.bank.movements_url,
+            )
+        )
         movements = []
         r = self.bank._fetch(
             self.bank.movements_url,
@@ -123,8 +131,13 @@ class BACBankAccount(AbstractBankAccount):
                 "productId": self.account_bank_reference,
                 "initDate": start_date.strftime("%d/%m/%Y"),
                 "endDate": end_date.strftime("%d/%m/%Y"),
+                "initAmount": None,
+                "limitAmount": None,
+                "initReference": None,
+                "endReference": None,
             },
         )
+        logging.info(r)
         bs = BeautifulSoup(r, features="html5lib")
         table_body = bs.find("table", {"id": "transactions"}).find("tbody")
         if table_body:
