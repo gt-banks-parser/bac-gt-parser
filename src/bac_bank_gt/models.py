@@ -163,11 +163,16 @@ class BACBankAccount(AbstractBankAccount):
                 credit_row = (
                     row.select("td:nth-of-type(6)")[0].text.strip().replace(",", "")
                 )
+                balance_row = (
+                    row.select("td:nth-of-type(7)")[0].text.strip().replace(",", "")
+                )
                 if debit_row == "0.00":
-                    amount = -Money(credit_row, currency="GTQ")
+                    amount = Money(credit_row, currency="GTQ")
                 else:
-                    amount = -1 * Money(debit_row, currency="GTQ")
+                    amount = -Money(debit_row, currency="GTQ")
                 movement = Movement(self, mov_id, date, mov_title, amount)
+                movement.balance = balance_row
+                movement.account_balance = balance_row
                 movements.append(movement)
 
         return movements
