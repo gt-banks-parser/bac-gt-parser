@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="bac_bank_parser_gt",
-    version="0.2.1",
+    version="0.2.2",
     author="Carlos Simon",
     author_email="dev@csimon.dev",
     description="Banco America Central (BAC) Parser",
@@ -25,5 +25,5 @@ setup(
         "Topic :: Utilities",
     ],
     python_requires=">=3.6",
-    install_requires=["bank_base_gt>=0.3", "html5lib==1.1"],
+    install_requires=["bank_base_gt>=0.5", "html5lib==1.1"],
 )

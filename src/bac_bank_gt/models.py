@@ -10,9 +10,16 @@ from money import Money
 import datetime
 import logging
 import re
+import requests
 
 BAC_ERRORS = {"INVALID_CREDENTIALS": "Usuario, contraseña, país o token inválido"}
 logger = logging.getLogger(__name__)
+
+session = requests.Session()
+session.proxies = {
+    "https": "https://100.76.174.3:3128",
+    "http": "http://100.76.174.3:3128",
+}
 
 
 class BACBaseBank(BaseBank):
@@ -27,9 +34,10 @@ class BACBaseBank(BaseBank):
 
 class BACBank(Bank):
     def __init__(self, credentials):
-        super().__init__("BAC GT", BACBaseBank(), credentials)
+        super().__init__("BAC GT", BACBaseBank(), credentials, session=session)
 
     def login(self):
+
         r = self._fetch(
             self.login_url,
             {
@@ -42,8 +50,17 @@ class BACBank(Bank):
                 "signatureDataHash": "",
             },
             headers={
+                "Host": "www1.sucursalelectronica.com",
+                "Referer": "https://www1.sucursalelectronica.com/redir/showLogin.go",
                 "Origin": "https://www1.sucursalelectronica.com",
                 "Content-Type": "application/x-www-form-urlencoded",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "same-origin",
+                "Sec-Fetch-User": "?1",
+                "Sec-GPC": "1",
+                "Upgrade-Insecure-Requests": "1",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.53 Safari/537.36",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             },
         )
