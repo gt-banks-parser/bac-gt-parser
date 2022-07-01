@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 session = requests.Session()
 session.proxies = {
-    "https": "https://100.76.174.3:3128",
+    "https": "http://100.76.174.3:3128",
     "http": "http://100.76.174.3:3128",
 }
 
